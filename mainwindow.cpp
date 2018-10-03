@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
         updateTimer.setInterval(20000);
         connect(&updateTimer,SIGNAL(timeout()),this,SLOT(requestUpdate()));
         requestUpdate();
-        updateTimer.start();
+        //updateTimer.start();
 
 
 
@@ -76,8 +76,41 @@ void MainWindow::geoUpdated(QGeoPositionInfo update){
 
     QGeoCoordinate coordinate =  update.coordinate();
 
+    QString str = coordinate.toString();
+
     ui->statusBar->showMessage(coordinate.toString());
 
+    QString lat = QString().setNum(coordinate.latitude(),'f',6);
+    QString lon = QString().setNum(coordinate.longitude(),'f',6);
 
+
+    QNetworkRequest request;
+    QString url  = "https://api.weather.yandex.ru/v1/forecast?lat=%1&lon=%2&extra=true";
+    url = url.arg(lat).arg(lon);
+
+    request.setUrl(url);
+    request.setRawHeader("X-Yandex-API-Key", "23b11d43-a334-48e0-b86e-1bc7ca0e76f0");
+    //request.setRawHeader("Content-Type", "text/html");
+    //request.setRawHeader("Accept", "*/*");
+
+    reply = manager.get(request);//Получаем данные с сервера
+    connect(reply, SIGNAL(finished()),this,SLOT(getReplyFinished()));
+
+
+
+
+}
+
+
+void MainWindow::getReplyFinished(){
+
+
+
+    QByteArray responce = reply->readAll();
+
+    ui->textBrowser->clear();
+    ui->textBrowser->append(responce);
+
+    reply->deleteLater();
 
 }

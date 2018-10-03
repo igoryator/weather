@@ -6,6 +6,8 @@
 #include <QtPositioning>
 #include <QTimer>
 
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 namespace Ui {
 class MainWindow;
 }
@@ -25,11 +27,16 @@ public slots:
     void geoTimeout();
     void geoError(QGeoPositionInfoSource::Error positioningError);
     void requestUpdate();
+    void getReplyFinished();
 
 private:
     Ui::MainWindow *ui;
     QGeoPositionInfoSource* geoSource = 0;
     QTimer updateTimer;
+
+
+    QNetworkAccessManager manager;
+    QNetworkReply* reply;
 };
 
 #endif // MAINWINDOW_H
