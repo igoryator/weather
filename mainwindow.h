@@ -8,6 +8,9 @@
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include "weatherview.h"
+#include "weathermodel.h"
+#include <QGridLayout>
 namespace Ui {
 class MainWindow;
 }
@@ -37,6 +40,9 @@ private:
 
     QNetworkAccessManager manager;
     QNetworkReply* reply;
+    weatherView* weather;
+    weatherModel wModel;
+    QGridLayout* gridLayout;
 };
 
 #endif // MAINWINDOW_H

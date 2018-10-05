@@ -25,10 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    weatherview.cpp \
+    weathermodel.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    weatherview.h \
+    weathermodel.h
 
 FORMS += \
         mainwindow.ui
+
+RESOURCES += \
+    icons.qrc

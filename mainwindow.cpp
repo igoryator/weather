@@ -32,14 +32,22 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
 
-    int z = 0;
+    gridLayout = new QGridLayout();
 
+    weather = new weatherView(&wModel, this);
+
+    gridLayout->addWidget(weather);
+
+
+    ui->centralWidget->setLayout(gridLayout);
 
 }
 
 MainWindow::~MainWindow()
 {
 
+    delete weather;
+    delete gridLayout;
     if(geoSource)
         delete geoSource;
     delete ui;
@@ -85,7 +93,7 @@ void MainWindow::geoUpdated(QGeoPositionInfo update){
 
 
     QNetworkRequest request;
-    QString url  = "https://api.weather.yandex.ru/v1/forecast?lat=%1&lon=%2&extra=true";
+    QString url  = "https://api.weather.yandex.ru/v1/forecast?lat=%1&lon=%2&extra=true&limit=3";
     url = url.arg(lat).arg(lon);
 
     request.setUrl(url);
@@ -99,6 +107,7 @@ void MainWindow::geoUpdated(QGeoPositionInfo update){
 
 
 
+
 }
 
 
@@ -108,8 +117,7 @@ void MainWindow::getReplyFinished(){
 
     QByteArray responce = reply->readAll();
 
-    ui->textBrowser->clear();
-    ui->textBrowser->append(responce);
+    wModel.setWeatherData(responce);
 
     reply->deleteLater();
 
