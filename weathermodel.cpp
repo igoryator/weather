@@ -34,7 +34,14 @@ unsigned int weatherModel::hourlyCount(unsigned int day){
 void weatherModel::setWeatherData(QByteArray &jsonData){
 
 
-    modelData = jsonData;
+    QJsonParseError err;
+    json = QJsonDocument::fromJson(jsonData, &err);
+    if(err.error==QJsonParseError::NoError){
+
+        isDataLoaded = true;
+
+    }
+
 
 
 }
@@ -47,6 +54,14 @@ QImage weatherModel::iconForDay(unsigned int day){
         return QImage();
 
     }
+
+    if(!isDataLoaded){
+
+        return QImage();
+    }
+
+
+
 
 
     return QImage(":/icons/15.png");

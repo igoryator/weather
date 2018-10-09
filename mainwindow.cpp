@@ -97,7 +97,7 @@ void MainWindow::geoUpdated(QGeoPositionInfo update){
     url = url.arg(lat).arg(lon);
 
     request.setUrl(url);
-    request.setRawHeader("X-Yandex-API-Key", "23b11d43-a334-48e0-b86e-1bc7ca0e76f0");
+    request.setRawHeader("X-Yandex-API-Key", "7392ad59-8cdb-4693-9a95-66913c1949ec");
     //request.setRawHeader("Content-Type", "text/html");
     //request.setRawHeader("Accept", "*/*");
 
@@ -118,6 +118,7 @@ void MainWindow::getReplyFinished(){
     QByteArray responce = reply->readAll();
 
     wModel.setWeatherData(responce);
+    weather->update();
 
     reply->deleteLater();
 

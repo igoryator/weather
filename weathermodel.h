@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QImage>
+#include <QJsonDocument>
 
 class weatherModel : public QObject
 {
@@ -24,7 +25,8 @@ public slots:
 private:
 
     QByteArray modelData;
-
+    QJsonDocument json;
+    bool isDataLoaded = false;
 };
 
 #endif // WEATHERMODEL_H
