@@ -1,6 +1,7 @@
 #include "weatherview.h"
 #include <QPainter>
 #include <QResizeEvent>
+#include <QSvgRenderer>
 weatherView::weatherView(weatherModel* m, QWidget *parent) : QWidget(parent)
 {
 
@@ -64,8 +65,11 @@ void weatherView::paintEvent(QPaintEvent *event){
 
     for(unsigned int n=0;n<daysCount;n++){
 
+        QSvgRenderer renderer;
+        renderer.load(model->iconForDay(n));
+        renderer.render(&painter,days.at(n));
 
-        painter.drawImage(days.at(n), model->iconForDay(n));
+        //painter.drawImage(days.at(n), model->iconForDay(n));
 
     }
 

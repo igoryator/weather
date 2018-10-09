@@ -14,7 +14,7 @@ public:
     void setWeatherData(QByteArray& jsonData);
 
     unsigned int daysCount();
-    QImage iconForDay(unsigned int day);
+    QByteArray iconForDay(unsigned int day);
 
     unsigned int hourlyCount(unsigned int day);
 
@@ -27,6 +27,7 @@ private:
     QByteArray modelData;
     QJsonDocument json;
     bool isDataLoaded = false;
+    QByteArray getImage(QString iconCode);
 };
 
 #endif // WEATHERMODEL_H
