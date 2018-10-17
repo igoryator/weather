@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QImage>
 #include <QJsonDocument>
+#include <QMap>
 
 class weatherModel : public QObject
 {
@@ -28,6 +29,7 @@ private:
     QJsonDocument json;
     bool isDataLoaded = false;
     QByteArray getImage(QString iconCode);
+    QMap<QString,QByteArray> images;
 };
 
 #endif // WEATHERMODEL_H

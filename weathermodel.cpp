@@ -57,74 +57,43 @@ QByteArray weatherModel::getImage(QString iconCode){
 
 
 
-
-        QString fileName = QString("%1.svg").arg(iconCode);
-
-
-        if(QFile::exists(fileName)){
-
-            QFile file(fileName);
-
-            QByteArray imageData;
-
-            if(file.open(QIODevice::ReadOnly)){
-
-                imageData = file.readAll();
-                file.close();
-            }
-
-            return imageData;
-
-        } else {
-
-            QString url = QString("https://yastatic.net/weather/i/icons/blueye/color/svg/%1.svg").arg(iconCode);
-            QNetworkRequest request;
-            request.setUrl(url);
-            QNetworkAccessManager manager;
-            QNetworkReply* reply = manager.get(request);
-
-            while (!reply->isFinished()) {
-
-                QApplication::processEvents();
-            }
+    if(images.contains(iconCode)){
 
 
-            if(reply->isFinished()){
+        return images.take(iconCode);
 
 
-                QByteArray imageData = reply->readAll();
-                reply->deleteLater();
-
-                QFile file(fileName);
-                if(file.open(QIODevice::WriteOnly)){
+    } else {
 
 
-                    file.write(imageData);
-                    file.close();
+        QString url = QString("https://yastatic.net/weather/i/icons/blueye/color/svg/%1.svg").arg(iconCode);
+        QNetworkRequest request;
+        request.setUrl(url);
+        QNetworkAccessManager manager;
+        QNetworkReply* reply = manager.get(request);
 
-                }
+        while (!reply->isFinished()) {
 
-
-                return imageData;
-
-
-            } else {
-
-                reply->deleteLater();
-                return QByteArray();
-            }
-
-
-
+            QApplication::processEvents();
         }
 
 
+        if(reply->isFinished()){
 
 
+            QByteArray imageData = reply->readAll();
+            reply->deleteLater();
+
+            images.insert(iconCode,imageData);
+            return imageData;
 
 
+        } else {
 
-
+            reply->deleteLater();
+            return QByteArray();
+        }
+    }
 
 }
 

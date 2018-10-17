@@ -28,6 +28,7 @@ void weatherView::paintEvent(QPaintEvent *event){
 
 
     QPainter painter(this);
+    QSvgRenderer renderer;
 
     QPen pen = painter.pen();
     pen.setWidth(3);
@@ -65,9 +66,12 @@ void weatherView::paintEvent(QPaintEvent *event){
 
     for(unsigned int n=0;n<daysCount;n++){
 
-        QSvgRenderer renderer;
+        QImage ic(days.at(n).width(), days.at(n).height(),QImage::QImage::Format_ARGB32);
+        ic.fill(0);
+        QPainter p(&ic);
         renderer.load(model->iconForDay(n));
-        renderer.render(&painter,days.at(n));
+        renderer.render(&p);
+        painter.drawImage(days.at(n),ic);
 
         //painter.drawImage(days.at(n), model->iconForDay(n));
 
