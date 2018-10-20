@@ -4,7 +4,9 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QApplication>
-
+#include <QJsonArray>
+#include <QDate>
+#include <QDateTime>
 weatherModel::weatherModel(QObject *parent) : QObject(parent)
 {
 
@@ -142,6 +144,47 @@ QByteArray weatherModel::iconForDay(unsigned int day){
 
         }
 
+
+
+    } else {
+
+        QJsonValue forecast = json.object()["forecasts"];
+
+        if(!forecast.isArray()){
+
+
+            return QByteArray();
+        }
+
+
+        QJsonArray forec = forecast.toArray();
+
+        for(int n=0;n<forec.size();n++){
+
+
+            QJsonValue dayForecast = forec.at(n);
+
+            if(dayForecast.isObject()){
+
+
+                QJsonObject dayForec = dayForecast.toObject();
+
+                QDate date = QDate::fromString(dayForec["date"].toString(),"yyyy-MM-dd");
+                QDate currentDate = QDate::currentDate();
+
+                if(currentDate.daysTo(date)!=day) continue;
+
+                // dayForec/parts/day/icon
+
+
+                QString iconCode = dayForec["parts"].toObject()["day"].toObject()["icon"].toString();
+
+                return getImage(iconCode);
+
+
+            }
+
+        }
 
 
     }
