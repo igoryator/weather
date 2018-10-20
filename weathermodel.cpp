@@ -32,7 +32,17 @@ unsigned int weatherModel::hourlyCount(unsigned int day){
 
     }
 
-    return 10;
+    if(day==0){
+
+        return 6;
+
+    } else {
+
+        return 6;
+
+    }
+
+
 
 }
 
@@ -132,16 +142,6 @@ QByteArray weatherModel::iconForDay(unsigned int day){
             return getImage(iconCode);
 
 
-
-
-
-
-
-
-
-
-
-
         }
 
 
@@ -194,3 +194,139 @@ QByteArray weatherModel::iconForDay(unsigned int day){
 
 
 }
+
+QByteArray weatherModel::iconForHour(unsigned int day, unsigned int hour){
+
+
+
+    if(day>daysCount()){
+
+
+        return QByteArray();
+    }
+
+    if(hour>hourlyCount(day)){
+
+
+        return QByteArray();
+
+    }
+
+
+    if(day==0){
+
+        // looking for current day forecast
+
+        QJsonValue forecast = json.object()["forecasts"];
+
+        if(!forecast.isArray()){
+
+
+            return QByteArray();
+        }
+
+
+        QJsonArray forec = forecast.toArray();
+
+        for(int n=0;n<forec.size();n++){
+
+
+            QJsonValue dayForecast = forec.at(n);
+
+            if(dayForecast.isObject()){
+
+
+                QJsonObject dayForec = dayForecast.toObject();
+
+                QDate date = QDate::fromString(dayForec["date"].toString(),"yyyy-MM-dd");
+                QDate currentDate = QDate::currentDate();
+
+                if(currentDate!=date) continue;
+
+                // dayForec/parts/day/icon
+
+
+                QJsonArray hours = dayForec["hours"].toArray();
+
+                unsigned int currentHour = QDateTime::currentDateTime().time().hour();
+
+                for(int n=0;n<hours.size();n++){
+
+                    QJsonObject hourForec = hours[n].toObject();
+
+                    unsigned int fHour = hourForec["hour"].toString().toUInt();
+
+                    if((currentHour+hour)!=fHour) continue;
+
+                    QString iconCode = hourForec["icon"].toString();
+
+                    return getImage(iconCode);
+
+                }
+
+            }
+
+        }
+
+    } else {
+
+
+        QJsonValue forecast = json.object()["forecasts"];
+
+        if(!forecast.isArray()){
+
+
+            return QByteArray();
+        }
+
+
+        QJsonArray forec = forecast.toArray();
+
+        for(int n=0;n<forec.size();n++){
+
+
+            QJsonValue dayForecast = forec.at(n);
+
+            if(dayForecast.isObject()){
+
+
+                QJsonObject dayForec = dayForecast.toObject();
+
+                QDate date = QDate::fromString(dayForec["date"].toString(),"yyyy-MM-dd");
+                QDate currentDate = QDate::currentDate();
+
+                if(currentDate.daysTo(date)!=day) continue;
+
+                // dayForec/parts/day/icon
+
+                QJsonArray hours = dayForec["hours"].toArray();
+
+
+                for(int n=0;n<hours.size();n++){
+
+                    QJsonObject hourForec = hours[n].toObject();
+
+                    unsigned int fHour = hourForec["hour"].toString().toUInt();
+
+                    if(fHour!=(hour)*4) continue;
+
+                    QString iconCode = hourForec["icon"].toString();
+
+                    return getImage(iconCode);
+
+                }
+
+
+            }
+
+        }
+
+
+
+    }
+
+    return QByteArray();
+
+
+}
+

@@ -16,6 +16,7 @@ public:
 
     unsigned int daysCount();
     QByteArray iconForDay(unsigned int day);
+    QByteArray iconForHour(unsigned int day, unsigned int hour);
 
     unsigned int hourlyCount(unsigned int day);
 

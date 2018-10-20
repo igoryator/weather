@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -114,11 +115,22 @@ void MainWindow::geoUpdated(QGeoPositionInfo update){
 void MainWindow::getReplyFinished(){
 
 
+    if(reply->isReadable()){
 
-    QByteArray responce = reply->readAll();
 
-    wModel.setWeatherData(responce);
-    weather->update();
+        QByteArray responce = reply->readAll();
+
+        wModel.setWeatherData(responce);
+        weather->renderIcons();
+        weather->renderPix();
+        weather->update();
+    } else {
+
+
+        QMessageBox::warning(this,"Warning", "Can't get weather data");
+
+    }
+
 
     reply->deleteLater();
 
