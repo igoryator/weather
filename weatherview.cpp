@@ -5,7 +5,8 @@
 weatherView::weatherView(weatherModel* m, QWidget *parent) : QWidget(parent)
 {
 
-    setGeometry(parent->rect());
+    if(parent)setGeometry(parent->geometry());
+    else setGeometry(200,200, 320, 240);
     model = m;
     renderIcons();
 }
@@ -26,23 +27,36 @@ void weatherView::renderPix(){
 
     QPen pen = painter.pen();
     pen.setWidth(3);
+    pen.setColor(QColor(128,128,128,128));
     painter.setPen(pen);
 
     painter.drawRects(days);
     painter.drawRects(hourly);
+    painter.drawRects(daysTemp);
+    painter.drawRects(hourlyTemp);
 
+    QFont font("Helvetica");
+    font.setPointSize(height()/12);
+
+    painter.setFont(font);
     unsigned int daysCount = model->daysCount();
     unsigned int hourlyCount = model->hourlyCount(daySelected);
 
+    pen = painter.pen();
+    pen.setWidth(3);
+    pen.setColor(QColor(255,128,128,128));
+    painter.setPen(pen);
     for(unsigned int n=0;n<daysCount;n++){
 
         painter.drawImage(days.at(n),dayIcons.at(n));
+        painter.drawText(daysTemp.at(n),model->tempForDay(n),QTextOption(Qt::AlignCenter));
 
     }
 
     for(unsigned int n=0;n<hourlyCount;n++){
 
         painter.drawImage(hourly.at(n),hourIcons.at(n));
+        painter.drawText(hourlyTemp.at(n),model->tempForHour(daySelected,n),QTextOption(Qt::AlignCenter));
     }
 
 
@@ -68,14 +82,14 @@ void weatherView::calcRects(){
 
     qreal w,h;
 
-    if(width()>=height()*2){
+    if(width()>=height()*1.5){
 
-        w = height()*2;
+        w = height()*1.5;
         h = height();
 
     } else {
 
-        h = width()/2;
+        h = width()/1.5;
         w = width();
 
     }
@@ -88,8 +102,12 @@ void weatherView::calcRects(){
     float dayX = 0;
     for(unsigned int n=0;n<daysCount;n++){
 
-        if(n<days.size()) days.replace(n,QRectF(dayX,0,dayWidth,h*2/3));
-        else days.append(QRectF(dayX,0,dayWidth,h*2/3));
+        if(n<days.size()) days.replace(n,QRectF(dayX,0,dayWidth,h*0.5));
+        else days.append(QRectF(dayX,0,dayWidth,h*0.5));
+
+        if(n<daysTemp.size()) daysTemp.replace(n, QRectF(dayX,h*0.5,dayWidth,h*0.15));
+        else daysTemp.append(QRectF(dayX,h*0.5,dayWidth,h*0.15));
+
         dayX += dayWidth;
 
     }
@@ -103,8 +121,12 @@ void weatherView::calcRects(){
     for(unsigned int n=0;n<hourlyCount;n++){
 
 
-        if(n<hourly.size()) hourly.replace(n,QRectF(hourlyX,h*2/3,hourlyWidth,h/3));
-        else hourly.append(QRectF(hourlyX,h*2/3,hourlyWidth,h/3));
+        if(n<hourly.size()) hourly.replace(n,QRectF(hourlyX,h*0.65,hourlyWidth,h*0.25));
+        else hourly.append(QRectF(hourlyX,h*0.65,hourlyWidth,h*0.25));
+
+        if(n<hourlyTemp.size()) hourlyTemp.replace(n, QRectF(hourlyX, h*0.9,hourlyWidth,h*0.1));
+        else hourlyTemp.append(QRectF(hourlyX, h*0.9,hourlyWidth,h*0.1));
+
         hourlyX += hourlyWidth;
 
     }

@@ -30,6 +30,8 @@ private:
 
     QVector<QRectF> days;
     QVector<QRectF> hourly;
+    QVector<QRectF> daysTemp;
+    QVector<QRectF> hourlyTemp;
     QVector<QImage> dayIcons;
     QVector<QImage> hourIcons;
     weatherModel* model;

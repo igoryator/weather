@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     gridLayout = new QGridLayout();
+    gridLayout->setGeometry(this->geometry());
 
     weather = new weatherView(&wModel, this);
 

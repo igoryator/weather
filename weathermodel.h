@@ -18,6 +18,9 @@ public:
     QByteArray iconForDay(unsigned int day);
     QByteArray iconForHour(unsigned int day, unsigned int hour);
 
+    QString tempForDay(unsigned int day);
+    QString tempForHour(unsigned int day, unsigned int hour);
+
     unsigned int hourlyCount(unsigned int day);
 
 signals:
